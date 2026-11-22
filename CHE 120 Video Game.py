@@ -48,36 +48,39 @@ def draw(alive):
 
 def move():
     """Update object positions."""
+    #adds gravity to the objects, dropping 5 pixels per frame
     bird.y -= 5
 
+    #moves the obstacles three pixels to the left per frame
     for ball in balls:
         ball.x -= 3
 
-    if randrange(10) == 0:
-        y = randrange(-199, 199)
-        ball = vector(199, y)
-        balls.append(ball)
+  
+    if randrange(10) == 0: #gives a 1-in-10 chance for each frame to generate a new obstacle
+        y = randrange(-199, 199) #assigns a random y-value for the obstacle inside the range of the screen
+        ball = vector(199, y) #stores a new coordinate for the obstacle
+        balls.append(ball) #adds the new obstacle to the list balls
 
-    while len(balls) > 0 and not inside(balls[0]):
-        balls.pop(0)
+    while len(balls) > 0 and not inside(balls[0]): # checks that the list balls is not empty to prevent an error and then finds the oldest obstacle that is still 'inside' or otherwise on the screen
+        balls.pop(0) #removes the oldest ball from the list so that there are not unlimited obstacles 
 
-    if not inside(bird):
+    if not inside(bird): #checks if the bird is still on the screen and if not ends the game
         draw(False)
         return
 
-    for ball in balls:
+    for ball in balls: #checks the distance between the obstacles and the bird using the size of both to make sure they dont overlap or otherwise ends the game
         if abs(ball - bird) < 15:
             draw(False)
             return
 
-    draw(True)
-    ontimer(move, 50)
+    draw(True) #keeps the game going otherwise
+    ontimer(move, 50) #keeps the game moving
 
 
-setup(420, 420, 370, 0)
-hideturtle()
-up()
-tracer(False)
-onscreenclick(tap)
+setup(420, 420, 370, 0) #create a 420x420 window at screen position (370, 0)
+hideturtle() #hide the default turtle pointer
+up() #prevent lines from being drawn between points
+tracer(False) #
+onscreenclick(tap) #call the functions
 move()
 done()
